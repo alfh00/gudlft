@@ -1,6 +1,10 @@
+import os
+from dotenv import load_dotenv
+
 import json
 from flask import Flask,render_template,request,redirect,flash,url_for
 
+load_dotenv()
 
 def loadClubs():
     with open('clubs.json') as c:
