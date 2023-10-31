@@ -28,7 +28,7 @@ clubs = loadClubs()
 def index():
     return render_template('index.html')
 
-@app.route('/showSummary',methods=['POST'])
+@app.route('/showSummary',methods=['POST', 'GET'])
 def showSummary():
     club = next((club for club in clubs if club['email'] == request.form['email']), None)
     if club is not None:
@@ -40,13 +40,14 @@ def showSummary():
 
 @app.route('/book/<competition>/<club>')
 def book(competition,club):
-    foundClub = [c for c in clubs if c['name'] == club][0]
-    foundCompetition = [c for c in competitions if c['name'] == competition][0]
-    if foundClub and foundCompetition:
+    foundClub = next((c for c in clubs if c['name'] == club), None)
+    foundCompetition = next((c for c in competitions if c['name'] == competition), None)
+
+    if foundClub is not None and foundCompetition is not None:
         return render_template('booking.html',club=foundClub,competition=foundCompetition)
     else:
-        flash("Something went wrong-please try again")
-        return render_template('welcome.html', club=club, competitions=competitions)
+        flash("Something went wrong, please try again")
+        return redirect(url_for('index'))
 
 
 @app.route('/purchasePlaces',methods=['POST'])
