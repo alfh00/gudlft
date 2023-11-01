@@ -10,3 +10,7 @@ env
 .env
 
 tests
+.pytest_cache
+.coveragerc
+.coverage
+htmlcov
