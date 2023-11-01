@@ -10,3 +10,7 @@ env
 .env
 
 tests
+
+.coverage
+.coveragerc
+htmlcov
