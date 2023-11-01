@@ -52,10 +52,29 @@ def book(competition,club):
 
 @app.route('/purchasePlaces',methods=['POST'])
 def purchasePlaces():
-    competition = [c for c in competitions if c['name'] == request.form['competition']][0]
-    club = [c for c in clubs if c['name'] == request.form['club']][0]
+    MAX_PLACES_NUMBER = 12
+    competition = next((c for c in competitions if c['name'] == request.form['competition']), None)
+    club = next((c for c in clubs if c['name'] == request.form['club']), None)
     placesRequired = int(request.form['places'])
-    competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
+
+    available_places = int(competition['numberOfPlaces'])
+    club_points = int(club['points'])
+
+    if available_places == 0:
+        flash(f"This Competition Is Complete.")
+        return redirect(url_for('index'))
+    if available_places > MAX_PLACES_NUMBER:
+        flash(f"You can purchase less than 12 places.")
+        return redirect(url_for('index'))
+    if int(club['points']) < available_places:
+        flash(f"You can purchase less than 12 places.")
+        return redirect(url_for('index'))
+    if available_places < placesRequired :
+        flash(f"Only {available_places} are available.")
+        return redirect(url_for('index'))
+    
+    competition['numberOfPlaces'] = str(available_places - placesRequired)
+    club['points'] = str(int(club['points']) - placesRequired)
     flash('Great-booking complete!')
     return render_template('welcome.html', club=club, competitions=competitions)
 
