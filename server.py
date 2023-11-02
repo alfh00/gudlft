@@ -55,28 +55,40 @@ def purchasePlaces():
     MAX_PLACES_NUMBER = 12
     competition = next((c for c in competitions if c['name'] == request.form['competition']), None)
     club = next((c for c in clubs if c['name'] == request.form['club']), None)
-    placesRequired = int(request.form['places'])
 
-    available_places = int(competition['numberOfPlaces'])
-    club_points = int(club['points'])
+    if competition is not None and club is not None:
+        try:
+            placesRequired = int(request.form['places'])
+        except (ValueError, TypeError):
+            flash("Enter a valid number of places")
+            return redirect(url_for('book', competition= competition['name'], club= club['name']))
 
-    if available_places == 0:
-        flash(f"This Competition Is Complete.")
-        return redirect(url_for('index'))
-    if available_places > MAX_PLACES_NUMBER:
-        flash(f"You can purchase less than 12 places.")
-        return redirect(url_for('index'))
-    if int(club['points']) < available_places:
-        flash(f"You can purchase less than 12 places.")
-        return redirect(url_for('index'))
-    if available_places < placesRequired :
-        flash(f"Only {available_places} are available.")
-        return redirect(url_for('index'))
+
+        available_places = int(competition['numberOfPlaces'])
+        club_points = int(club['points'])
+
+        
+        if available_places == 0:
+            flash(f"This Competition Is Complete.")
+            return redirect(url_for('book', competition= competition['name'], club= club['name']))
+        if placesRequired > MAX_PLACES_NUMBER:
+            flash(f"You can purchase less than 12 places.")
+            return redirect(url_for('book', competition= competition['name'], club= club['name']))
+        if club_points < placesRequired:
+            flash(f"Not enough points, try less places.")
+            return redirect(url_for('book', competition= competition['name'], club= club['name']))
+        if available_places < placesRequired :
+            flash(f"Only {available_places} are available.")
+            return redirect(url_for('book', competition= competition['name'], club= club['name']))
+        
+        competition['numberOfPlaces'] = str(available_places - placesRequired)
+        club['points'] = str(club_points- placesRequired)
+        flash('Great-booking complete!')
+        return render_template('welcome.html', club=club, competitions=competitions)
     
-    competition['numberOfPlaces'] = str(available_places - placesRequired)
-    club['points'] = str(int(club['points']) - placesRequired)
-    flash('Great-booking complete!')
-    return render_template('welcome.html', club=club, competitions=competitions)
+    else:
+        flash("Something went wrong, please try again")
+        return redirect(url_for('index'))
 
 
 # TODO: Add route for points display
