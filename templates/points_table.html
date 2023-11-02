@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<a href="{{url_for('showSummary', email=club['email'])}}">Back to welcome page</a>
+{{club['email']}}
+<table>
+ <tr>
+  <th>Club</th>
+  <th>Points</th>
+ </tr>
+ {% for club in clubs %}
+ <tr>
+  <td>{{ club.name }}</td>
+  <td>{{ club.points }}</td>
+ </tr>
+ {% endfor %}
+</table>
+<style>
+ table {
+  border-collapse: collapse;
+  width: 50%;
+  margin: 20px auto;
+ }
+
+
+ th,
+ td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+ }
+
+
+ tr:nth-child(2n+1) {
+  background-color: #f2f2f2;
+ }
+</style>
+
+{% endblock content %}

@@ -30,7 +30,12 @@ def index():
 
 @app.route('/showSummary',methods=['POST', 'GET'])
 def showSummary():
-    club = next((club for club in clubs if club['email'] == request.form['email']), None)
+    if request.method == 'POST':
+        email =request.form['email']
+    if request.method == 'GET':
+        email = request.args.get('email')
+
+    club = next((club for club in clubs if club['email'] == email), None)
     if club is not None:
         return render_template('welcome.html',club=club,competitions=competitions)
     else:
@@ -92,6 +97,15 @@ def purchasePlaces():
 
 
 # TODO: Add route for points display
+@app.route('/points-table/<club>')
+def show_points_table(club):
+    foundClub = next((c for c in clubs if c['name'] == club), None)
+    if foundClub is not None:
+        return render_template('points_table.html',club=foundClub, clubs=clubs)
+    else:
+        flash("email doesn't match any club")
+        return redirect(url_for('index'))
+
 
 
 @app.route('/logout')
