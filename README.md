@@ -2,6 +2,8 @@
 
 ## Description
 
+Güdlft, a company that has created a digital platform to coordinate strength competitions (deadlifting, strongman) in North America and Australia.
+
 ## Table of Contents
 
 - [Features](#features)
