@@ -9,7 +9,6 @@ __pycache__
 env
 .env
 
-tests
 .pytest_cache
 .coveragerc
 .coverage
