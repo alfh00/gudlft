@@ -38,7 +38,7 @@ def test_book_view(client, competition, club, expected_content, expected_status)
     assert expected_content in response.data
 
 @pytest.mark.parametrize("competition, club, req_places, expected_content, expected_status", [
-    ('Fall Classic', 'Iron Temple', '0', b'Great-booking complete!', 200),  
+    ('Fall Classic', 'Iron Temple', '0', b'Please book at least 1 place.', 200),  
     ('Fall Classic', 'Iron Temple', '13', b'You can purchase less than 12 places.', 200),  
     ('Fall Classic', 'Iron Temple', '8', b'Not enough points, try less places.', 200),  
     ('Fall Classic', 'Iron Temple', 'hello', b'Enter a valid number of places', 200),
